@@ -1,4 +1,4 @@
-package nl.avans.bombsandberries;
+package bombsandberries.server;
 
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 

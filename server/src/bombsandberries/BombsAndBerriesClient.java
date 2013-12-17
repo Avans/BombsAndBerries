@@ -1,3 +1,4 @@
+package bombsandberries;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.Socket;
@@ -8,41 +9,51 @@ public class BombsAndBerriesClient {
 	// Size of the game grid the players move on
 	public final static int SPACES_WIDTH = 20;
 	public final static int SPACES_HEIGHT = 20;
-	
-	private final static String HOST = "localhost"; 
+
+	public final static String HOST = "localhost";
+	public final static int PORT = 54321;
 
 	// Game state
 	private ArrayList<Player> players;
 	private ArrayList<Bomb> bombs;
 	private ArrayList<Berry> berries;
-	
+
 	private String studentNumber;
-	
+
 	// Connection to the game server
 	Socket serverConnection;
 
 	public BombsAndBerriesClient(String studentNumber) {
 		this.studentNumber = studentNumber;
-		
+
 		players = new ArrayList<Player>();
 		bombs = new ArrayList<Bomb>();
 		berries = new ArrayList<Berry>();
 
 		// Make a connection to the game server
 		try {
-			serverConnection = new Socket(HOST, 53421);
+			serverConnection = new Socket(HOST, PORT);
 			serverConnection.setTcpNoDelay(true);
-			serverConnection.getOutputStream().write((studentNumber + "\n").getBytes());
 			
+			// Send student number to the server
+			serverConnection.getOutputStream().write(
+					(studentNumber + "\n").getBytes());
+
 			// Read possible error
-			String status = new BufferedReader(new InputStreamReader(serverConnection.getInputStream())).readLine();
-			if(!status.equals("OK")) {
-				System.err.println("Error while connecting to the game server: " + status);
+			String status = new BufferedReader(new InputStreamReader(
+					serverConnection.getInputStream())).readLine();
+			if (!status.equals("OK")) { // Server should send "OK" if all is
+										// well
+				System.err
+						.println("Error while connecting to the game server: "
+								+ status);
 				throw new Error();
 			}
-			
-			System.out.println("Connected to the Bombs and Berries game server at " + HOST);
-			
+
+			System.out
+					.println("Connected to the Bombs and Berries game server at "
+							+ HOST + " on port " + PORT);
+
 		} catch (Exception e) {
 			System.err.println("Failed to connect to the game server.");
 			throw new Error(e);
