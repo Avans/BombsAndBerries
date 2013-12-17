@@ -35,7 +35,7 @@ public class BombsAndBerries implements ApplicationListener {
 		batch = new SpriteBatch();
 
 		bucket = new Rectangle();
-		bucket.x = 800 / 2 - 64 / 2;
+		bucket.x = 0;
 		bucket.y = 20;
 		bucket.width = 64;
 		bucket.height = 64;
@@ -51,22 +51,23 @@ public class BombsAndBerries implements ApplicationListener {
 		System.out.println("Pause");
 	}
 
+	int x = 0;
+
 	@Override
 	public void render() {
 		Gdx.gl.glClearColor(0, 0, 0.2f, 1);
-	    Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
-	    
-	    camera.update();
-	    
-	    batch.setProjectionMatrix(camera.combined);
-	    batch.begin();
-	    batch.draw(dropImage, bucket.x, bucket.y);
-	    batch.end();
+		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
+
+		camera.update();
+
+		batch.setProjectionMatrix(camera.combined);
+		batch.begin();
+		batch.draw(dropImage, bucket.x + x++, bucket.y);
+		batch.end();
 	}
 
 	@Override
 	public void resize(int width, int height) {
-		System.out.println("Resize " + width + " " + height);
 	}
 
 	@Override
