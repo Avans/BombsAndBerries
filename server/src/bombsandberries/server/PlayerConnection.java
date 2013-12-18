@@ -1,5 +1,6 @@
 package bombsandberries.server;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
@@ -32,7 +33,12 @@ public class PlayerConnection {
 		}
 	}
 	
+	public String readLine() throws IOException {
+		return new BufferedReader(reader).readLine();
+	}
+	
 	public void writeString(String string) throws IOException {
 		writer.write((string + "\n").toCharArray());
+		writer.flush();
 	}
 }

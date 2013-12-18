@@ -12,14 +12,14 @@ import bombsandberries.BombsAndBerriesClient;
 public class Server implements Runnable {
 	private HashMap<String, String> students;
 
-	private Set<PlayerConnection> connections;
+	private Game game;
 
 	public static void main(String args[]) {
-		new Server().run();
-		;
+		Game game = new Game();
+		new Server(game).run();
 	}
 
-	public Server() {
+	public Server(Game game) {
 		students = new HashMap<String, String>();
 		students.put("2074759", "Lennard Albarda");
 		students.put("2075114", "Peter Askey");
@@ -54,22 +54,42 @@ public class Server implements Runnable {
 		students.put("2076193", "Thomas Philipse");
 		students.put("2071857", "Nick van Batenburg");
 
-		connections = new HashSet<PlayerConnection>();
+		this.game = game;
 	}
 
 	public void run() {
-		System.out.println("Starting Game Server");
+		// Error catching loop
 		while (true) {
+			System.out.println("Starting Game Server");
 			ServerSocket serverSocket = null;
 			try {
 				serverSocket = new ServerSocket(BombsAndBerriesClient.PORT);
 
+				// Socket accepting loop
 				while (true) {
 					Socket socket = serverSocket.accept();
 					try {
+						System.out.println("Accepted!");
+						// Do the handshake (player sends studentNumber, we send
+						// "OK")
 						PlayerConnection playerConnection = new PlayerConnection(
 								socket);
-						connections.add(playerConnection);
+						String studentNumber = playerConnection.readLine();
+						System.out.println("Studentnumber: " + studentNumber);
+
+						if (!students.containsKey(studentNumber)) {
+							playerConnection
+									.writeString("Student number "
+											+ studentNumber
+											+ " is unknown. Please contact the teacher.");
+						} else if (game.studentIsConnected(studentNumber)) {
+							playerConnection.writeString("Student number "
+									+ studentNumber + " is already connected");
+						} else {
+							playerConnection.writeString("OK");
+							game.addNewPlayer(studentNumber, playerConnection);
+						}
+
 					} catch (Exception e) {
 						System.err.println(e.getMessage());
 					}

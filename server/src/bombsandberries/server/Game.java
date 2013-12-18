@@ -109,6 +109,15 @@ public class Game {
 		newId++;
 		return newId;
 	}
+
+	public boolean studentIsConnected(String studentNumber) {
+		for(ServerPlayer player : players) {
+			if(player.getStudentNumber().equals(studentNumber)) {
+				return true;
+			}
+		}
+		return false;
+	}
 	
 	
 }
