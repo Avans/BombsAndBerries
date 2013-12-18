@@ -16,7 +16,17 @@ public class Server implements Runnable {
 
 	public static void main(String args[]) {
 		Game game = new Game();
-		new Server(game).run();
+		
+		new Thread(new Server(game)).start();
+		
+		while(true) {
+			game.gametick();
+			
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+			}
+		}
 	}
 
 	public Server(Game game) {
@@ -87,7 +97,7 @@ public class Server implements Runnable {
 									+ studentNumber + " is already connected");
 						} else {
 							playerConnection.writeString("OK");
-							game.addNewPlayer(studentNumber, playerConnection);
+							game.addNewPlayer(studentNumber, students.get(studentNumber), playerConnection);
 						}
 
 					} catch (Exception e) {

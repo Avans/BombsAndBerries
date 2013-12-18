@@ -1,5 +1,7 @@
 package bombsandberries;
+
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -21,7 +23,8 @@ public class BombsAndBerriesClient {
 	private String studentNumber;
 
 	// Connection to the game server
-	Socket serverConnection;
+	private Socket serverConnection;
+	private BufferedReader reader;
 
 	public BombsAndBerriesClient(String studentNumber) {
 		this.studentNumber = studentNumber;
@@ -34,14 +37,15 @@ public class BombsAndBerriesClient {
 		try {
 			serverConnection = new Socket(HOST, PORT);
 			serverConnection.setTcpNoDelay(true);
-			
+
 			// Send student number to the server
 			serverConnection.getOutputStream().write(
 					(studentNumber + "\n").getBytes());
 
 			// Read possible error
-			String status = new BufferedReader(new InputStreamReader(
-					serverConnection.getInputStream())).readLine();
+			reader = new BufferedReader(new InputStreamReader(
+					serverConnection.getInputStream()));
+			String status = reader.readLine();
 			if (!status.equals("OK")) { // Server should send "OK" if all is
 										// well
 				System.err
@@ -145,16 +149,24 @@ public class BombsAndBerriesClient {
 		return players;
 	}
 
-	private void sendCommandAndSynchronize(Command left) {
+	private void sendCommandAndSynchronize(Command command) {
+		try {
+			serverConnection.getOutputStream().write((int) command.getChar());
+			synchronize();
+		} catch (IOException e) {
+			// Crash application on network error
+			throw new Error(e);
+		}
 
-		synchronize();
 	}
 
 	/**
 	 * Wait for a new gamestate from the server and update all local objects to
 	 * the new game state.
+	 * @throws IOException 
 	 */
-	private void synchronize() {
-
+	private void synchronize() throws IOException {
+		String state = reader.readLine();
+		System.out.println("State: " + state);
 	}
 }

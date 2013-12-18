@@ -26,13 +26,14 @@ public class Game {
 		berries = new HashSet<Berry>();
 	}
 	
-	public ServerPlayer addNewPlayer(String studentNumber, PlayerConnection connection) {
-		ServerPlayer player = new ServerPlayer(getNewId(), studentNumber, connection);
+	public ServerPlayer addNewPlayer(String studentNumber, String name, PlayerConnection connection) {
+		ServerPlayer player = new ServerPlayer(getNewId(), studentNumber, name, connection);
 		players.add(player);
 		return player;
 	}
 	
 	public void gametick() {
+		System.out.println("TICK players: " + players.size());
 		// Execute move and drop bombs commands
 		Set<ServerPlayer> playersToRemove = new HashSet<ServerPlayer>();
 		Set<ServerPlayer> playersToSendGameState = new HashSet<ServerPlayer>();
@@ -42,7 +43,7 @@ public class Game {
 				Command command = player.getCommand();
 				if(command != null) {
 					player.executeMoveCommand(command);
-					System.out.println("Executing command " + command);
+					System.out.println(player + " executes command " + command);
 					playersToSendGameState.add(player);
 				}
 			} catch (IOException e) {
@@ -79,7 +80,7 @@ public class Game {
 			player_json.put("student_number", player.getStudentNumber());
 			players_json.put(player_json);
 		}
-		state.put("players", players);
+		state.put("players", players_json);
 		
 		// Encode bombs
 		JSONArray bombs_json = new JSONArray();

@@ -7,6 +7,7 @@ import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.Writer;
 import java.net.Socket;
+import java.net.SocketTimeoutException;
 
 public class PlayerConnection {
 
@@ -15,8 +16,9 @@ public class PlayerConnection {
 	Writer writer;
 
 	public PlayerConnection(Socket socket) throws IOException {
-		reader = new InputStreamReader(socket.getInputStream());
-		writer = new OutputStreamWriter(socket.getOutputStream());
+		this.socket = socket;
+		this.reader = new InputStreamReader(socket.getInputStream());
+		this.writer = new OutputStreamWriter(socket.getOutputStream());
 	}
 
 	/**
@@ -25,10 +27,14 @@ public class PlayerConnection {
 	 * @throws IOException
 	 */
 	public char getSingleChar() throws IOException {
-
-		if (reader.ready()) {
-			return (char) reader.read();
-		} else {
+		try {
+			socket.setSoTimeout(1);
+			int read = reader.read();
+			if(read == -1) {
+				throw new IOException("End of stream reached");
+			}
+			return (char) read;
+		} catch (SocketTimeoutException s) {
 			return ' ';
 		}
 	}

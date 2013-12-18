@@ -9,9 +9,9 @@ public class ServerPlayer extends Player {
 
 	private PlayerConnection connection;
 
-	public ServerPlayer(int id, String studentNumber,
+	public ServerPlayer(int id, String studentNumber, String name, 
 			PlayerConnection connection) {
-		super(id, studentNumber);
+		super(id, studentNumber, name);
 		this.connection = connection;
 	}
 
