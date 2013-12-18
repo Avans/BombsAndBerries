@@ -6,8 +6,12 @@ public class Player extends GameObject {
 	private String name;
 	private int score;
 
-	public Player(int id, String studentNumber, String name) {
-		super(id);
+	public Player(String studentNumber, String name) {
+		this(studentNumber, name, 0, 0);
+	}
+
+	public Player(String studentNumber, String name, int x, int y) {
+		super(x, y);
 		this.studentNumber = studentNumber;
 		this.score = 0;
 		this.name = name;
@@ -24,5 +28,14 @@ public class Player extends GameObject {
 	public String toString() {
 		return name;
 	};
+	
+	public String getName() {
+		return name;
+	}
+
+	void setScore(int score) {
+		this.score = score;
+		
+	}
 
 }

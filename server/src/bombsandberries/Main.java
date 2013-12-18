@@ -6,9 +6,10 @@ public class Main {
 
 		while (true) {
 			game.moveLeft();
-			game.moveUp();
+			
+			System.out.println(game.getOwnPlayer().x + " after left " + game.getOwnPlayer().y);
 			game.moveRight();
-			game.moveDown();
+			System.out.println(game.getOwnPlayer().x + " after right" + game.getOwnPlayer().y);
 		}
 	}
 }

@@ -20,7 +20,7 @@ public class Server implements Runnable {
 		new Thread(new Server(game)).start();
 		
 		while(true) {
-			game.gametick();
+			game.tick();
 			
 			try {
 				Thread.sleep(1000);

@@ -1,15 +1,17 @@
 package bombsandberries;
 
 public class GameObject {
-	protected int id;
-	
 	protected int x;
 	protected int y;
 
-	public GameObject(int id) {
-		
+	public GameObject(int x, int y) {
+		this.x = x;
+		this.y = y;
 	}
 	
+	public GameObject() {
+	}
+
 	public int getX() {
 		return x;
 	}

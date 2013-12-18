@@ -1,6 +1,7 @@
 package bombsandberries.server;
 
 import java.io.IOException;
+import java.util.Collection;
 
 import bombsandberries.Command;
 import bombsandberries.Player;
@@ -11,7 +12,7 @@ public class ServerPlayer extends Player {
 
 	public ServerPlayer(int id, String studentNumber, String name, 
 			PlayerConnection connection) {
-		super(id, studentNumber, name);
+		super(studentNumber, name);
 		this.connection = connection;
 	}
 

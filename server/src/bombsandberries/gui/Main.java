@@ -1,4 +1,4 @@
-package bombsandberries.server;
+package bombsandberries.gui;
 
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 
