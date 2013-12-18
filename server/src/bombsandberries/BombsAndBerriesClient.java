@@ -64,42 +64,42 @@ public class BombsAndBerriesClient {
 	 * Move your player character one space to the left
 	 */
 	public void moveLeft() {
-		sendCommandAndSynchronize('L');
+		sendCommandAndSynchronize(Command.LEFT);
 	}
 
 	/**
 	 * Move your player character one space to the right
 	 */
 	public void moveRight() {
-		sendCommandAndSynchronize('R');
+		sendCommandAndSynchronize(Command.RIGHT);
 	}
 
 	/**
 	 * Move your player character one space to the top
 	 */
 	public void moveUp() {
-		sendCommandAndSynchronize('U');
+		sendCommandAndSynchronize(Command.UP);
 	}
 
 	/**
 	 * Move your player character one space to the bottom
 	 */
 	public void moveDown() {
-		sendCommandAndSynchronize('D');
+		sendCommandAndSynchronize(Command.DOWN);
 	}
 
 	/**
 	 * Stand still
 	 */
 	public void idle() {
-		sendCommandAndSynchronize('I');
+		sendCommandAndSynchronize(Command.IDLE);
 	}
 
 	/**
 	 * Drops a bomb on the current location of the player
 	 */
 	public void dropBomb() {
-		sendCommandAndSynchronize('B');
+		sendCommandAndSynchronize(Command.DROP_BOMB);
 	}
 
 	/**
@@ -145,7 +145,7 @@ public class BombsAndBerriesClient {
 		return players;
 	}
 
-	private void sendCommandAndSynchronize(char command) {
+	private void sendCommandAndSynchronize(Command left) {
 
 		synchronize();
 	}
