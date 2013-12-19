@@ -1,7 +1,6 @@
 package bombsandberries.server;
 
 import java.io.IOException;
-import java.util.Collection;
 
 import bombsandberries.Command;
 import bombsandberries.Player;
@@ -9,6 +8,9 @@ import bombsandberries.Player;
 public class ServerPlayer extends Player {
 
 	private PlayerConnection connection;
+	
+	private double animatedX;
+	private double animatedY;
 
 	public ServerPlayer(int id, String studentNumber, String name, 
 			PlayerConnection connection) {
@@ -44,7 +46,29 @@ public class ServerPlayer extends Player {
 
 	public void increaseScore() {
 		score++;
-		
+	}
+	
+	@Override
+	public void setPosition(int x, int y) {
+		super.setPosition(x, y);
+		setAnimatedX(x);
+		setAnimatedY(y);
+	}
+
+	public double getAnimatedY() {
+		return animatedY;
+	}
+
+	public void setAnimatedY(double animatedY) {
+		this.animatedY = animatedY;
+	}
+
+	public double getAnimatedX() {
+		return animatedX;
+	}
+
+	public void setAnimatedX(double animatedX) {
+		this.animatedX = animatedX;
 	}
 
 }

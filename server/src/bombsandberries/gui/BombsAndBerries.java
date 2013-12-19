@@ -11,13 +11,10 @@ import bombsandberries.server.ServerPlayer;
 
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.audio.Sound;
-import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.Rectangle;
 
 /**
  * Main game class for libgdx
@@ -26,14 +23,12 @@ import com.badlogic.gdx.math.Rectangle;
  */
 public class BombsAndBerries implements ApplicationListener {
 
-	Texture dropImage;
-	Texture grassTile;
+	private Game game;
+	private OrthographicCamera camera;
+	private SpriteBatch batch;
 
-	Game game;
-	OrthographicCamera camera;
-	SpriteBatch batch;
-	
-	private Sound explosionSound;
+	private Texture grassTile;
+
 	private Texture smileyTexture;
 	private Texture bombTexture;
 	private Texture berryTexture;
@@ -51,7 +46,7 @@ public class BombsAndBerries implements ApplicationListener {
 		// Start server thread
 		new Thread(new Server(game)).start();
 
-		// Run gameticks thread
+		// start gameticks thread
 		new Thread() {
 			public void run() {
 				while (true) {
@@ -65,14 +60,11 @@ public class BombsAndBerries implements ApplicationListener {
 			};
 		}.start();
 
-		dropImage = new Texture(Gdx.files.internal("res/droplet.png"));
 		grassTile = new Texture(Gdx.files.internal("res/grasstile.png"));
 		smileyTexture = new Texture(Gdx.files.internal("res/smiley.png"));
 		bombTexture = new Texture(Gdx.files.internal("res/bomb.png"));
 		explosionTexture = new Texture(Gdx.files.internal("res/explosion.png"));
 		berryTexture = new Texture(Gdx.files.internal("res/berry.png"));
-		
-
 
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false, WIDTH, HEIGHT);
@@ -122,11 +114,18 @@ public class BombsAndBerries implements ApplicationListener {
 
 			// Draw players
 			for (ServerPlayer player : game.getPlayers()) {
-				drawAtPosition(batch, smileyTexture, player.getX(),
-						player.getY());
-				font.draw(batch, player.getName() + " (" + player.getScore()
-						+ ")", player.getX() * tileWidth,
-						HEIGHT - player.getY() * tileHeight);
+				// Smooth to actual position
+				player.setAnimatedX(player.getAnimatedX()
+						+ (player.getX() - player.getAnimatedX()) * 0.15);
+				player.setAnimatedY(player.getAnimatedY()
+						+ (player.getY() - player.getAnimatedY()) * 0.15);
+
+				drawAtPosition(batch, smileyTexture,
+						(float) player.getAnimatedX(),
+						(float) player.getAnimatedY());
+				font.draw(batch, player.getScore() + " - " + player.getName(),
+						(int) (player.getAnimatedX() * tileWidth), HEIGHT
+								- (int) (player.getAnimatedY() * tileHeight));
 			}
 
 			// Draw explosions
