@@ -15,7 +15,6 @@ public class BombsAndBerriesClient {
 	public final static int SPACES_WIDTH = 10;
 	public final static int SPACES_HEIGHT = 10;
 
-	public final static String HOST = "localhost";
 	public final static int PORT = 54321;
 
 	// Game state
@@ -29,7 +28,7 @@ public class BombsAndBerriesClient {
 	private Socket serverConnection;
 	private BufferedReader reader;
 
-	public BombsAndBerriesClient(String studentNumber) {
+	public BombsAndBerriesClient(String host, String studentNumber) {
 		this.studentNumber = studentNumber;
 
 		players = new ArrayList<Player>();
@@ -38,7 +37,7 @@ public class BombsAndBerriesClient {
 
 		// Make a connection to the game server
 		try {
-			serverConnection = new Socket(HOST, PORT);
+			serverConnection = new Socket(host, PORT);
 			serverConnection.setTcpNoDelay(true);
 
 			// Send student number to the server
@@ -59,7 +58,7 @@ public class BombsAndBerriesClient {
 
 			System.out
 					.println("Connected to the Bombs and Berries game server at "
-							+ HOST + " on port " + PORT);
+							+ host + " on port " + PORT);
 
 		} catch (Exception e) {
 			System.err.println("Failed to connect to the game server.");
@@ -170,7 +169,6 @@ public class BombsAndBerriesClient {
 	 */
 	private void synchronize() throws IOException {
 		String state = reader.readLine();
-		System.out.println(state);
 		JSONObject state_json = new JSONObject(state);
 		
 		// Synchronize bombs

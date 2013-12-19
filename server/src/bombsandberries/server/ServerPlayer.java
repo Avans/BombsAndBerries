@@ -33,12 +33,18 @@ public class ServerPlayer extends Player {
 		if (command == Command.LEFT && x > 0) {
 			x--;
 		} else if (command == Command.RIGHT && x < Game.WIDTH - 1) {
+			System.out.println(x);
 			x++;
 		} else if (command == Command.UP && y > 0) {
 			y--;
 		} else if (command == Command.DOWN && y < Game.HEIGHT - 1) {
 			y++;
 		} 
+	}
+
+	public void increaseScore() {
+		score++;
+		
 	}
 
 }

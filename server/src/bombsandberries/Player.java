@@ -4,7 +4,7 @@ public class Player extends GameObject {
 
 	private String studentNumber;
 	private String name;
-	private int score;
+	protected int score;
 
 	public Player(String studentNumber, String name) {
 		this(studentNumber, name, 0, 0);
@@ -33,7 +33,7 @@ public class Player extends GameObject {
 		return name;
 	}
 
-	void setScore(int score) {
+	public void setScore(int score) {
 		this.score = score;
 		
 	}

@@ -4,12 +4,14 @@ import org.lwjgl.opengl.GL11;
 
 import bombsandberries.Berry;
 import bombsandberries.Bomb;
+import bombsandberries.server.Explosion;
 import bombsandberries.server.Game;
 import bombsandberries.server.Server;
 import bombsandberries.server.ServerPlayer;
 
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -30,13 +32,15 @@ public class BombsAndBerries implements ApplicationListener {
 	Game game;
 	OrthographicCamera camera;
 	SpriteBatch batch;
-	Rectangle bucket;
+	
+	private Sound explosionSound;
 	private Texture smileyTexture;
 	private Texture bombTexture;
 	private Texture berryTexture;
+	private Texture explosionTexture;
 
-	public static final int WIDTH = 640;
-	public static final int HEIGHT = 480;
+	public static final int WIDTH = 800;
+	public static final int HEIGHT = 800;
 
 	private BitmapFont font;
 
@@ -65,7 +69,10 @@ public class BombsAndBerries implements ApplicationListener {
 		grassTile = new Texture(Gdx.files.internal("res/grasstile.png"));
 		smileyTexture = new Texture(Gdx.files.internal("res/smiley.png"));
 		bombTexture = new Texture(Gdx.files.internal("res/bomb.png"));
+		explosionTexture = new Texture(Gdx.files.internal("res/explosion.png"));
 		berryTexture = new Texture(Gdx.files.internal("res/berry.png"));
+		
+
 
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false, WIDTH, HEIGHT);
@@ -101,21 +108,32 @@ public class BombsAndBerries implements ApplicationListener {
 			}
 		}
 
-		// Draw bombs
-		for (Bomb bomb : game.getBombs()) {
-			drawAtPosition(batch, bombTexture, bomb.getX(), bomb.getY());
-		}
+		synchronized (game) {
 
-		// Draw berries
-		for (Berry berry : game.getBerries()) {
-			drawAtPosition(batch, berryTexture, berry.getX(), berry.getY());
-		}
+			// Draw bombs
+			for (Bomb bomb : game.getBombs()) {
+				drawAtPosition(batch, bombTexture, bomb.getX(), bomb.getY());
+			}
 
-		// Draw players
-		for (ServerPlayer player : game.getPlayers()) {
-			drawAtPosition(batch, smileyTexture, player.getX(), player.getY());
-			font.draw(batch, player.getName(), player.getX() * tileWidth,
-					HEIGHT - player.getY() * tileHeight);
+			// Draw berries
+			for (Berry berry : game.getBerries()) {
+				drawAtPosition(batch, berryTexture, berry.getX(), berry.getY());
+			}
+
+			// Draw players
+			for (ServerPlayer player : game.getPlayers()) {
+				drawAtPosition(batch, smileyTexture, player.getX(),
+						player.getY());
+				font.draw(batch, player.getName() + " (" + player.getScore()
+						+ ")", player.getX() * tileWidth,
+						HEIGHT - player.getY() * tileHeight);
+			}
+
+			// Draw explosions
+			for (Explosion explosion : game.getExplosions()) {
+				drawAtPosition(batch, explosionTexture, explosion.getX(),
+						explosion.getY());
+			}
 		}
 
 		batch.end();
@@ -125,7 +143,7 @@ public class BombsAndBerries implements ApplicationListener {
 			float y) {
 
 		final int tileHeight = HEIGHT / Game.HEIGHT;
-		final int tileWidth = tileHeight;
+		final int tileWidth = WIDTH / Game.WIDTH;
 		batch.draw(texture, x * tileWidth,
 				HEIGHT - y * tileHeight - tileHeight, tileWidth, tileHeight);
 	}
