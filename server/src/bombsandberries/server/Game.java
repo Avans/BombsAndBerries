@@ -2,6 +2,7 @@ package bombsandberries.server;
 
 import java.io.IOException;
 import java.util.HashSet;
+import java.util.Random;
 import java.util.Set;
 
 import org.json.JSONArray;
@@ -10,8 +11,10 @@ import org.json.JSONObject;
 import bombsandberries.*;
 
 public class Game {
-	public static final int WIDTH = 10;
-	public static final int HEIGHT = 10;
+	public static final int WIDTH = BombsAndBerriesClient.SPACES_WIDTH;
+	public static final int HEIGHT = BombsAndBerriesClient.SPACES_HEIGHT;
+	
+	private static final int NUMBER_OF_BERRIES = 5;
 	private static int newId = 0;
 
 	private Set<Bomb> bombs;
@@ -56,6 +59,14 @@ public class Game {
 		// Execute bomb explosions
 
 		// Execute picking up of cherries
+		
+		// Generate new berries at random locations
+		while(berries.size() < NUMBER_OF_BERRIES) {
+			Random random = new Random();
+			int x = random.nextInt(WIDTH);
+			int y = random.nextInt(HEIGHT);
+			berries.add(new Berry(x, y));
+		}
 
 		// Send gamestate to clients
 		String gameState = encodeGameState();
@@ -99,7 +110,7 @@ public class Game {
 			JSONObject berry_json = new JSONObject();
 			berry_json.put("x", berry.getX());
 			berry_json.put("y", berry.getY());
-			berries_json.put(berry);
+			berries_json.put(berry_json);
 		}
 		state.put("berries", berries_json);
 
@@ -122,6 +133,14 @@ public class Game {
 
 	public Set<ServerPlayer> getPlayers() {
 		return players;
+	}
+
+	public Set<Bomb> getBombs() {
+		return bombs;
+	}
+	
+	public Set<Berry> getBerries() {
+		return berries;
 	}
 
 }

@@ -1,11 +1,16 @@
 package bombsandberries.gui;
 
+import org.lwjgl.opengl.GL11;
+
+import bombsandberries.Berry;
+import bombsandberries.Bomb;
 import bombsandberries.server.Game;
 import bombsandberries.server.Server;
 import bombsandberries.server.ServerPlayer;
 
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -32,13 +37,13 @@ public class BombsAndBerries implements ApplicationListener {
 
 	public static final int WIDTH = 640;
 	public static final int HEIGHT = 480;
-	
+
 	private BitmapFont font;
-	
+
 	@Override
 	public void create() {
 		game = new Game();
-		
+
 		// Start server thread
 		new Thread(new Server(game)).start();
 
@@ -55,7 +60,7 @@ public class BombsAndBerries implements ApplicationListener {
 				}
 			};
 		}.start();
-		
+
 		dropImage = new Texture(Gdx.files.internal("res/droplet.png"));
 		grassTile = new Texture(Gdx.files.internal("res/grasstile.png"));
 		smileyTexture = new Texture(Gdx.files.internal("res/smiley.png"));
@@ -69,8 +74,6 @@ public class BombsAndBerries implements ApplicationListener {
 
 		font = new BitmapFont();
 	}
-	
-	
 
 	@Override
 	public void dispose() {
@@ -84,34 +87,47 @@ public class BombsAndBerries implements ApplicationListener {
 
 	@Override
 	public void render() {
+		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
 		camera.update();
 		final int tileWidth = WIDTH / Game.WIDTH;
 		final int tileHeight = HEIGHT / Game.HEIGHT;
 		batch.setProjectionMatrix(camera.combined);
 		batch.begin();
-		
+
+		// Draw background tiles
 		for (int x = 0; x < Game.WIDTH; x++) {
 			for (int y = 0; y < Game.HEIGHT; y++) {
 				drawAtPosition(batch, grassTile, x, y);
 			}
 		}
 
+		// Draw bombs
+		for (Bomb bomb : game.getBombs()) {
+			drawAtPosition(batch, bombTexture, bomb.getX(), bomb.getY());
+		}
+
+		// Draw berries
+		for (Berry berry : game.getBerries()) {
+			drawAtPosition(batch, berryTexture, berry.getX(), berry.getY());
+		}
+
+		// Draw players
 		for (ServerPlayer player : game.getPlayers()) {
 			drawAtPosition(batch, smileyTexture, player.getX(), player.getY());
-			font.draw(batch, player.getName(), player.getX() * tileWidth, HEIGHT - player.getY() * tileHeight);
+			font.draw(batch, player.getName(), player.getX() * tileWidth,
+					HEIGHT - player.getY() * tileHeight);
 		}
-		
+
 		batch.end();
-		
-		
 	}
 
 	private void drawAtPosition(SpriteBatch batch, Texture texture, float x,
 			float y) {
-		final int tileWidth = WIDTH / Game.WIDTH;
+
 		final int tileHeight = HEIGHT / Game.HEIGHT;
-		batch.draw(texture, x * tileWidth, HEIGHT - y * tileHeight - tileHeight, tileWidth,
-				tileHeight);
+		final int tileWidth = tileHeight;
+		batch.draw(texture, x * tileWidth,
+				HEIGHT - y * tileHeight - tileHeight, tileWidth, tileHeight);
 	}
 
 	@Override

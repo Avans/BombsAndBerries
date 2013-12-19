@@ -12,8 +12,8 @@ import org.json.JSONObject;
 public class BombsAndBerriesClient {
 
 	// Size of the game grid the players move on
-	public final static int SPACES_WIDTH = 20;
-	public final static int SPACES_HEIGHT = 20;
+	public final static int SPACES_WIDTH = 10;
+	public final static int SPACES_HEIGHT = 10;
 
 	public final static String HOST = "localhost";
 	public final static int PORT = 54321;
@@ -170,6 +170,7 @@ public class BombsAndBerriesClient {
 	 */
 	private void synchronize() throws IOException {
 		String state = reader.readLine();
+		System.out.println(state);
 		JSONObject state_json = new JSONObject(state);
 		
 		// Synchronize bombs
