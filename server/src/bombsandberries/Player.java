@@ -20,22 +20,25 @@ public class Player extends GameObject {
 	public String getStudentNumber() {
 		return studentNumber;
 	}
-	
+
 	public int getScore() {
 		return score;
 	}
-	
+
 	public String toString() {
 		return name;
 	};
-	
+
 	public String getName() {
 		return name;
 	}
 
+	/**
+	 * Don't even think about using this method, because it won't change your
+	 * score on the server!
+	 */
 	public void setScore(int score) {
 		this.score = score;
-		
 	}
 
 }

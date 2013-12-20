@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
-import bombsandberries.BombsAndBerriesClient;
+import bombsandberries.GameControl;
 
 public class Server implements Runnable {
 	private HashMap<String, String> students;
@@ -73,7 +73,7 @@ public class Server implements Runnable {
 			System.out.println("Starting Game Server");
 			ServerSocket serverSocket = null;
 			try {
-				serverSocket = new ServerSocket(BombsAndBerriesClient.PORT);
+				serverSocket = new ServerSocket(GameControl.PORT);
 
 				// Socket accepting loop
 				while (true) {
@@ -98,6 +98,7 @@ public class Server implements Runnable {
 						} else {
 							playerConnection.writeString("OK");
 							game.addNewPlayer(studentNumber, students.get(studentNumber), playerConnection);
+							playerConnection.writeString(game.encodeGameState());
 						}
 
 					} catch (Exception e) {

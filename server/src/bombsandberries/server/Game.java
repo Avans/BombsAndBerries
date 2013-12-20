@@ -1,6 +1,7 @@
 package bombsandberries.server;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
@@ -14,8 +15,8 @@ import com.badlogic.gdx.audio.Sound;
 import bombsandberries.*;
 
 public class Game {
-	public static final int WIDTH = BombsAndBerriesClient.SPACES_WIDTH;
-	public static final int HEIGHT = BombsAndBerriesClient.SPACES_HEIGHT;
+	public static final int WIDTH = GameControl.SPACES_WIDTH;
+	public static final int HEIGHT = GameControl.SPACES_HEIGHT;
 
 	private static final int NUMBER_OF_BERRIES = 5;
 	private static int newId = 0;
@@ -24,17 +25,23 @@ public class Game {
 	private Set<ServerPlayer> players;
 	private Set<Berry> berries;
 	private Set<Explosion> explosions;
-	
+	private HashMap<String, Integer> scores;
+
 	private Sound explosionSound;
 	private Sound berrySound;
-	
+
 	public Game() {
 		explosions = new HashSet<Explosion>();
 		bombs = new HashSet<Bomb>();
 		players = new HashSet<ServerPlayer>();
 		berries = new HashSet<Berry>();
-		explosionSound = Gdx.audio.newSound(Gdx.files.internal("res/explosion.wav"));
-		berrySound = Gdx.audio.newSound(Gdx.files.internal("res/berry-get.wav"));
+
+		scores = new HashMap<String, Integer>();
+
+		explosionSound = Gdx.audio.newSound(Gdx.files
+				.internal("res/explosion.wav"));
+		berrySound = Gdx.audio
+				.newSound(Gdx.files.internal("res/berry-get.wav"));
 	}
 
 	public ServerPlayer addNewPlayer(String studentNumber, String name,
@@ -42,7 +49,11 @@ public class Game {
 		ServerPlayer player = new ServerPlayer(getNewId(), studentNumber, name,
 				connection);
 		Random random = new Random();
-		player.setPosition(random.nextInt(Game.WIDTH), random.nextInt(Game.HEIGHT));
+		player.setPosition(random.nextInt(Game.WIDTH),
+				random.nextInt(Game.HEIGHT));
+		// Restore score
+		if(scores.containsKey(studentNumber))
+			player.setScore(scores.get(studentNumber));
 		players.add(player);
 		return player;
 	}
@@ -84,6 +95,7 @@ public class Game {
 			if (bomb != null) {
 				bombs.remove(bomb);
 				player.setScore(0);
+				recordScore(player);
 				explosions.add(new Explosion(player.getX(), player.getY()));
 				explosionSound.play();
 			}
@@ -97,6 +109,7 @@ public class Game {
 			Berry berry = getBerryAtPosition(player.getX(), player.getY());
 			if (berry != null) {
 				player.increaseScore();
+				recordScore(player);
 				berries.remove(berry);
 				berrySound.play();
 			}
@@ -120,6 +133,10 @@ public class Game {
 			} catch (IOException e) {
 			}
 		}
+	}
+
+	private void recordScore(ServerPlayer player) {
+		scores.put(player.getStudentNumber(), player.getScore());
 	}
 
 	private Object getPlayerAtPosition(int x, int y) {
@@ -147,7 +164,7 @@ public class Game {
 		return null;
 	}
 
-	private String encodeGameState() {
+	public synchronized String encodeGameState() {
 		JSONObject state = new JSONObject();
 
 		// Encode players

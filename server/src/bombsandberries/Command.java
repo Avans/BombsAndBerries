@@ -1,7 +1,7 @@
 package bombsandberries;
 
 public enum Command {
-	LEFT('L'), RIGHT('R'), UP('U'), DOWN('D'), IDLE('I'), DROP_BOMB('B');
+	LEFT('L'), RIGHT('R'), UP('U'), DOWN('D'), IDLE('I'), DROP_BOMB('B'), DEFUSE('U');
 
 	private char c;
 

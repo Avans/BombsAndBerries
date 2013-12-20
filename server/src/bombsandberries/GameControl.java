@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-public class BombsAndBerriesClient {
+public class GameControl {
 
 	// Size of the game grid the players move on
 	public final static int SPACES_WIDTH = 10;
@@ -28,7 +28,7 @@ public class BombsAndBerriesClient {
 	private Socket serverConnection;
 	private BufferedReader reader;
 
-	public BombsAndBerriesClient(String host, String studentNumber) {
+	public GameControl(String host, String studentNumber) {
 		this.studentNumber = studentNumber;
 
 		players = new ArrayList<Player>();
@@ -55,6 +55,9 @@ public class BombsAndBerriesClient {
 								+ status);
 				throw new Error();
 			}
+
+			// Read first state
+			synchronize();
 
 			System.out
 					.println("Connected to the Bombs and Berries game server at "
@@ -106,6 +109,10 @@ public class BombsAndBerriesClient {
 	 */
 	public void dropBomb() {
 		sendCommandAndSynchronize(Command.DROP_BOMB);
+	}
+	
+	public void defuse() {
+		sendCommandAndSynchronize(Command.DEFUSE);
 	}
 
 	/**
@@ -165,39 +172,41 @@ public class BombsAndBerriesClient {
 	/**
 	 * Wait for a new gamestate from the server and update all local objects to
 	 * the new game state.
-	 * @throws IOException 
+	 * 
+	 * @throws IOException
 	 */
 	private void synchronize() throws IOException {
 		String state = reader.readLine();
 		JSONObject state_json = new JSONObject(state);
-		
+
 		// Synchronize bombs
 		bombs.clear();
 		JSONArray bombs_json = state_json.getJSONArray("bombs");
-		for(int i = 0; i < bombs_json.length(); i++) {
+		for (int i = 0; i < bombs_json.length(); i++) {
 			JSONObject bomb_json = bombs_json.getJSONObject(i);
 			bombs.add(new Bomb(bomb_json.getInt("x"), bomb_json.getInt("y")));
 		}
-		
+
 		// Synchronize berries
 		berries.clear();
 		JSONArray berries_json = state_json.getJSONArray("berries");
-		for(int i = 0; i < berries_json.length(); i++) {
+		for (int i = 0; i < berries_json.length(); i++) {
 			JSONObject berry_json = berries_json.getJSONObject(i);
-			berries.add(new Berry(berry_json.getInt("x"), berry_json.getInt("y")));
+			berries.add(new Berry(berry_json.getInt("x"), berry_json
+					.getInt("y")));
 		}
-		
+
 		// Synchronize players
 		players.clear();
 		JSONArray players_json = state_json.getJSONArray("players");
-		for(int i = 0; i < players_json.length(); i++) {
+		for (int i = 0; i < players_json.length(); i++) {
 			JSONObject player_json = players_json.getJSONObject(i);
 			Player player = new Player(player_json.getString("student_number"),
 					player_json.getString("name"), player_json.getInt("x"),
 					player_json.getInt("y"));
 			player.setScore(player_json.getInt("score"));
 			players.add(player);
-			
+
 		}
 	}
 }
