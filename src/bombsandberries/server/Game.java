@@ -43,7 +43,7 @@ public class Game {
 				.newSound(Gdx.files.internal("res/berry-get.wav"));
 	}
 
-	public ServerPlayer addNewPlayer(String studentNumber, String name,
+	public synchronized ServerPlayer addNewPlayer(String studentNumber, String name,
 			PlayerConnection connection) {
 		ServerPlayer player = new ServerPlayer(getNewId(), studentNumber, name,
 				connection);
@@ -209,7 +209,7 @@ public class Game {
 		return newId;
 	}
 
-	public boolean studentIsConnected(String studentNumber) {
+	public synchronized boolean studentIsConnected(String studentNumber) {
 		for (ServerPlayer player : players) {
 			if (player.getStudentNumber().equals(studentNumber)) {
 				return true;
