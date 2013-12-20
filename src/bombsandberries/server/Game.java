@@ -6,13 +6,12 @@ import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 
 import bombsandberries.*;
+import bombsandberries.json.JSONArray;
+import bombsandberries.json.JSONObject;
 
 public class Game {
 	public static final int WIDTH = GameControl.SPACES_WIDTH;

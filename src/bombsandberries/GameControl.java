@@ -6,8 +6,8 @@ import java.io.InputStreamReader;
 import java.net.Socket;
 import java.util.ArrayList;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
+import bombsandberries.json.JSONArray;
+import bombsandberries.json.JSONObject;
 
 public class GameControl {
 
