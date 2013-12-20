@@ -74,6 +74,8 @@ public class Game {
 				if (command == Command.DROP_BOMB && player.getScore() > 0) {
 					Bomb bomb = new Bomb(player.getX(), player.getY());
 					bombsToDrop.add(bomb);
+					player.decreaseScore(1);
+					recordScore(player);
 				} else {
 					if (command != null) {
 						player.executeMoveCommand(command);
@@ -93,7 +95,7 @@ public class Game {
 			Bomb bomb = getBombAtPosition(player.getX(), player.getY());
 			if (bomb != null) {
 				bombs.remove(bomb);
-				player.setScore(0);
+				player.decreaseScore(5);
 				recordScore(player);
 				explosions.add(new Explosion(player.getX(), player.getY()));
 				explosionSound.play();
@@ -107,7 +109,7 @@ public class Game {
 		for (ServerPlayer player : players) {
 			Berry berry = getBerryAtPosition(player.getX(), player.getY());
 			if (berry != null) {
-				player.increaseScore();
+				player.increaseScore(2);
 				recordScore(player);
 				berries.remove(berry);
 				berrySound.play();

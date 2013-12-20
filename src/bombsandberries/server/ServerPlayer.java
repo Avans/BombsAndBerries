@@ -44,8 +44,8 @@ public class ServerPlayer extends Player {
 		} 
 	}
 
-	public void increaseScore() {
-		score++;
+	public void increaseScore(int delta) {
+		score += delta;
 	}
 	
 	@Override
@@ -69,6 +69,12 @@ public class ServerPlayer extends Player {
 
 	public void setAnimatedX(double animatedX) {
 		this.animatedX = animatedX;
+	}
+
+	public void decreaseScore(int delta) {
+		score -= delta;
+		if(score < 0)
+			score = 0;
 	}
 
 }
