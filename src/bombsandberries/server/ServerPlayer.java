@@ -12,9 +12,9 @@ public class ServerPlayer extends Player {
 	private double animatedX;
 	private double animatedY;
 
-	public ServerPlayer(int id, String studentNumber, String name, 
+	public ServerPlayer(int id, String studentUsername, String name, 
 			PlayerConnection connection) {
-		super(studentNumber, name);
+		super(studentUsername, name);
 		this.connection = connection;
 	}
 

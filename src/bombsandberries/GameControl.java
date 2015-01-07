@@ -140,7 +140,7 @@ public class GameControl {
 	 */
 	public Player getOwnPlayer() {
 		for (Player player : players) {
-			if (player.getStudentNumber().equals(studentNumber)) {
+			if (player.getStudentUsername().equals(studentNumber)) {
 				return player;
 			}
 		}
@@ -201,7 +201,7 @@ public class GameControl {
 		JSONArray players_json = state_json.getJSONArray("players");
 		for (int i = 0; i < players_json.length(); i++) {
 			JSONObject player_json = players_json.getJSONObject(i);
-			Player player = new Player(player_json.getString("student_number"),
+			Player player = new Player(player_json.getString("student_username"),
 					player_json.getString("name"), player_json.getInt("x"),
 					player_json.getInt("y"));
 			player.setScore(player_json.getInt("score"));

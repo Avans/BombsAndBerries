@@ -43,16 +43,16 @@ public class Game {
 				.newSound(Gdx.files.internal("res/berry-get.wav"));
 	}
 
-	public synchronized ServerPlayer addNewPlayer(String studentNumber, String name,
+	public synchronized ServerPlayer addNewPlayer(String studentUsername, String name,
 			PlayerConnection connection) {
-		ServerPlayer player = new ServerPlayer(getNewId(), studentNumber, name,
+		ServerPlayer player = new ServerPlayer(getNewId(), studentUsername, name,
 				connection);
 		Random random = new Random();
 		player.setPosition(random.nextInt(Game.WIDTH),
 				random.nextInt(Game.HEIGHT));
 		// Restore score
-		if(scores.containsKey(studentNumber))
-			player.setScore(scores.get(studentNumber));
+		if(scores.containsKey(studentUsername))
+			player.setScore(scores.get(studentUsername));
 		players.add(player);
 		return player;
 	}
@@ -137,7 +137,7 @@ public class Game {
 	}
 
 	private void recordScore(ServerPlayer player) {
-		scores.put(player.getStudentNumber(), player.getScore());
+		scores.put(player.getStudentUsername(), player.getScore());
 	}
 
 	private Object getPlayerAtPosition(int x, int y) {
@@ -175,7 +175,7 @@ public class Game {
 			player_json.put("x", player.getX());
 			player_json.put("y", player.getY());
 			player_json.put("score", player.getScore());
-			player_json.put("student_number", player.getStudentNumber());
+			player_json.put("student_username", player.getStudentUsername());
 			player_json.put("name", player.getName());
 			players_json.put(player_json);
 		}
@@ -211,7 +211,7 @@ public class Game {
 
 	public synchronized boolean studentIsConnected(String studentNumber) {
 		for (ServerPlayer player : players) {
-			if (player.getStudentNumber().equals(studentNumber)) {
+			if (player.getStudentUsername().equals(studentNumber)) {
 				return true;
 			}
 		}

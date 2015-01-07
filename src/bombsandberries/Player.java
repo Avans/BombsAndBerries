@@ -2,23 +2,23 @@ package bombsandberries;
 
 public class Player extends GameObject {
 
-	private String studentNumber;
+	private String studentUsername;
 	private String name;
 	protected int score;
 
-	public Player(String studentNumber, String name) {
-		this(studentNumber, name, 0, 0);
+	public Player(String studentUsername, String name) {
+		this(studentUsername, name, 0, 0);
 	}
 
-	public Player(String studentNumber, String name, int x, int y) {
+	public Player(String studentUsername, String name, int x, int y) {
 		super(x, y);
-		this.studentNumber = studentNumber;
+		this.studentUsername = studentUsername;
 		this.score = 0;
 		this.name = name;
 	}
 
-	public String getStudentNumber() {
-		return studentNumber;
+	public String getStudentUsername() {
+		return studentUsername;
 	}
 
 	public int getScore() {
